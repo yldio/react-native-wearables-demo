@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Wearables from "react-native-wearables";
+import { Data } from "react-native-wearables";
 import { VictoryArea, VictoryChart, VictoryAxis } from "victory-native";
 import { histogram } from "d3-array";
 
@@ -16,29 +16,15 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    Wearables.initHealthKit(
-      { permissions: { read: [Wearables.Constants.Permissions.HeartRate] } },
-      (err, results) => {
-        if (err) {
-          this.setState({ error: new Error(ERRORS.failedInit) });
-          return;
-        }
-
-        Wearables.getHeartRateSamples(
-          {
-            startDate: new Date("2018-05-01").toISOString()
-          },
-          (err, results) => {
-            if (err) {
-              this.setState({ error: new Error(ERRORS.failedInit) });
-              return;
-            }
-
-            this.setState({ samples: results });
-          }
-        );
-      }
-    );
+    Data.authorize([Data.Types.heartRateBpm])
+      .then(() =>
+        Data.read(Data.Types.heartRateBpm, {
+          startDate: new Date("2018-05-01").toISOString(),
+          endDate: new Date().toISOString()
+        })
+      )
+      .then(samples => this.setState({ samples }))
+      .catch(error => console.error(error) || this.setState({ error }));
   }
 
   render() {
@@ -47,6 +33,8 @@ export default class App extends React.Component {
     let child;
     if (error) {
       child = <Text>Something went wrong :(</Text>;
+    } else if (samples && samples.length === 0) {
+      child = <Text>No data.</Text>;
     } else if (samples) {
       const bins = histogram()(samples.map(s => s.value));
       child = (
