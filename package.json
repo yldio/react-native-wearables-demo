@@ -21,6 +21,7 @@
     "d3-array": "^1.2.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
+    "react-native-google-fit": "file:../react-native-google-fit",
     "react-native-svg": "^6.3.1",
     "react-native-wearables": "file:../react-native-wearables",
     "rn-apple-healthkit": "^0.6.3",
