@@ -19,11 +19,11 @@ export default class App extends React.Component {
     Data.authorize([Data.Types.heartRateBpm])
       .then(() =>
         Data.read(Data.Types.heartRateBpm, {
-          startDate: new Date("2018-05-01").toISOString(),
-          endDate: new Date().toISOString()
+          startDate: new Date("2018-05-01"),
+          endDate: new Date()
         })
       )
-      .then(samples => this.setState({ samples }))
+      .then(samples => console.log(samples) || this.setState({ samples }))
       .catch(error => console.error(error) || this.setState({ error }));
   }
 
