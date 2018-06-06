@@ -4,11 +4,6 @@ import { Data } from "react-native-wearables";
 import { VictoryArea, VictoryChart, VictoryAxis } from "victory-native";
 import { histogram } from "d3-array";
 
-const ERRORS = {
-  failedInit: "failedInit",
-  failedQuery: "failedQuery"
-};
-
 export default class App extends React.Component {
   state = {
     error: null,
@@ -37,16 +32,15 @@ export default class App extends React.Component {
       child = <Text>No data.</Text>;
     } else if (samples) {
       const bins = histogram()(samples.map(s => s.value));
-      child = (
-        <View>
+      child = <React.Fragment>
+          <Text>Heart rate over the last 10 days</Text>
           <VictoryChart>
             <VictoryArea
               data={bins.map(bin => ({ x: bin.x0, y: bin.length }))}
             />
             <VictoryAxis />
           </VictoryChart>
-        </View>
-      );
+      </React.Fragment>;
     } else {
       child = <Text>Reading data...</Text>;
     }
